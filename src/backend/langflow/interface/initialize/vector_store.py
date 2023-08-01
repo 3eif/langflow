@@ -8,6 +8,7 @@ from langchain.vectorstores import (
     Weaviate,
     SupabaseVectorStore,
     MongoDBAtlasVectorSearch,
+    Vectara,
 )
 
 import os
@@ -19,6 +20,17 @@ def docs_in_params(params: dict) -> bool:
     return ("documents" in params and params["documents"]) or (
         "texts" in params and params["texts"]
     )
+
+def initialize_vectara(class_object: Type[Vectara], params: dict):
+    """Initialize vectara and return the class object"""
+    if not docs_in_params(params):
+        return class_object.load_local
+
+    save_local = params.get("save_local")
+    vectara_index = class_object(**params)
+    if save_local:
+        vectara_index.save_local(folder_path=save_local)
+    return vectara_index
 
 
 def initialize_mongodb(class_object: Type[MongoDBAtlasVectorSearch], params: dict):
@@ -240,4 +252,5 @@ vecstore_initializer: Dict[str, Callable[[Type[Any], dict], Any]] = {
     "FAISS": initialize_faiss,
     "SupabaseVectorStore": initialize_supabase,
     "MongoDBAtlasVectorSearch": initialize_mongodb,
+    "Vectara": initialize_vectara,
 }
