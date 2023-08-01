@@ -146,7 +146,8 @@ class VectorStoreFrontendNode(FrontendNode):
                 password=True,
                 value="",
             )
-            extra_fields.extend((extra_field, extra_field2, extra_field3, extra_field4))
+            extra_fields.extend(
+                (extra_field, extra_field2, extra_field3, extra_field4))
 
         elif self.template.type_name == "MongoDBAtlasVectorSearch":
             self.display_name = "MongoDB Atlas"
@@ -195,7 +196,32 @@ class VectorStoreFrontendNode(FrontendNode):
                 display_name="Index Name",
                 value="",
             )
-            extra_fields.extend((extra_field, extra_field2, extra_field3, extra_field4))
+            extra_fields.extend(
+                (extra_field, extra_field2, extra_field3, extra_field4))
+
+        elif self.template.type_name == "Vectara":
+            self.display_name = "Vectara"
+            extra_field = TemplateField(
+                name="folder_path",
+                field_type="str",
+                required=False,
+                placeholder="",
+                show=True,
+                advanced=True,
+                multiline=False,
+                display_name="Local Path",
+                value="",
+            )
+            extra_field2 = TemplateField(
+                name="index_name",
+                field_type="str",
+                required=False,
+                show=True,
+                advanced=False,
+                value="",
+                display_name="Index Name",
+            )
+            extra_fields.extend((extra_field, extra_field2))
 
         if extra_fields:
             for field in extra_fields:
