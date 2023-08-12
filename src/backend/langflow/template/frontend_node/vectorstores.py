@@ -289,6 +289,7 @@ class VectorStoreFrontendNode(FrontendNode):
             )
             extra_fields.extend((extra_field, extra_field2, extra_field3, extra_field4))
 
+<<<<<<< HEAD
         elif self.template.type_name == "Vectara":
             self.display_name = "Vectara"
             extra_field = TemplateField(
@@ -373,6 +374,8 @@ class VectorStoreFrontendNode(FrontendNode):
                     extra_field6,
                 )
             )
+=======
+>>>>>>> parent of 27eb11ec (Add basic Vectara implementation)
         if extra_fields:
             for field in extra_fields:
                 self.template.add_field(field)
