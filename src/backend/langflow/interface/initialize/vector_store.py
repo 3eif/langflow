@@ -21,15 +21,48 @@ def docs_in_params(params: dict) -> bool:
         "texts" in params and params["texts"]
     )
 
-def initialize_vectara(class_object: Type[Vectara], params: dict):
-    """Initialize vectara and return the class object"""
-    if not docs_in_params(params):
-        return class_object.load_local
 
-    save_local = params.get("save_local")
-    vectara_index = class_object(**params)
-    if save_local:
-        vectara_index.save_local(folder_path=save_local)
+def initialize_vectara(class_object: Type[Vectara], params: dict) -> Any:
+    """Initialize Vectara based on the provided parameters and return the class object."""
+    print(params)
+    customer_id = params.pop("vectara_customer_id", None)
+    corpus_id = params.pop("vectara_corpus_id", None)
+    api_key = params.pop("vectara_api_key", None)
+    metadata_filter = params.pop("vectara_metadata_filter", None)
+    lambda_function = params.pop("vectara_lambda", None)
+    top_k = params.pop("vectara_top_k", None)
+
+    if not customer_id:
+        raise ValueError("Vectara Customer ID must be provided.")
+    if not corpus_id:
+        raise ValueError("Vectara Corpus ID must be provided.")
+    if not api_key:
+        raise ValueError("Vectara API Key must be provided.")
+
+    if docs_in_params(params):
+        if "texts" in params:
+            params["documents"] = params.pop("texts")
+        for doc in params["documents"]:
+            if doc.metadata is None:
+                doc.metadata = {}
+            for key, value in doc.metadata.items():
+                if value is None:
+                    doc.metadata[key] = ""
+        vectara_index = class_object(**params)
+    else:
+        vectara_index = class_object(
+            vectara_customer_id=customer_id,
+            vectara_corpus_id=corpus_id,
+            vectara_api_key=api_key,
+        )
+
+    if metadata_filter:
+        vectara_index.set_metadata_filter(metadata_filter)
+    if lambda_function:
+        vectara_index.set_lambda_function(lambda_function)
+    if top_k:
+        vectara_index.set_top_k(top_k)
+
     return vectara_index
 
 
