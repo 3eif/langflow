@@ -146,8 +146,7 @@ class VectorStoreFrontendNode(FrontendNode):
                 password=True,
                 value="",
             )
-            extra_fields.extend(
-                (extra_field, extra_field2, extra_field3, extra_field4))
+            extra_fields.extend((extra_field, extra_field2, extra_field3, extra_field4))
 
         elif self.template.type_name == "MongoDBAtlasVectorSearch":
             self.display_name = "MongoDB Atlas"
@@ -196,33 +195,92 @@ class VectorStoreFrontendNode(FrontendNode):
                 display_name="Index Name",
                 value="",
             )
-            extra_fields.extend(
-                (extra_field, extra_field2, extra_field3, extra_field4))
+            extra_fields.extend((extra_field, extra_field2, extra_field3, extra_field4))
 
         elif self.template.type_name == "Vectara":
             self.display_name = "Vectara"
             extra_field = TemplateField(
-                name="folder_path",
+                name="vectara_customer_id",
+                field_type="str",
+                required=True,
+                placeholder="",
+                show=True,
+                advanced=False,
+                multiline=False,
+                password=False,
+                display_name="Customer ID",
+                value="",
+            )
+            extra_field2 = TemplateField(
+                name="vectara_corpus_id",
+                field_type="str",
+                required=True,
+                placeholder="",
+                show=True,
+                advanced=False,
+                multiline=False,
+                password=False,
+                display_name="Corpus ID",
+                value="",
+            )
+            extra_field3 = TemplateField(
+                name="vectara_api_key",
+                field_type="str",
+                required=True,
+                placeholder="",
+                show=True,
+                advanced=False,
+                multiline=False,
+                password=True,
+                display_name="API Key",
+                value="",
+            )
+            extra_field4 = TemplateField(
+                name="vectara_metadata_filter",
+                field_type="code",
+                required=False,
+                placeholder="",
+                show=True,
+                advanced=True,
+                multiline=True,
+                password=False,
+                display_name="Metadata Filter",
+                value="",
+            )
+            extra_field5 = TemplateField(
+                name="vectara_lambda",
                 field_type="str",
                 required=False,
                 placeholder="",
                 show=True,
                 advanced=True,
                 multiline=False,
-                display_name="Local Path",
+                password=False,
+                display_name="Lambda",
                 value="",
             )
-            extra_field2 = TemplateField(
-                name="index_name",
+            extra_field6 = TemplateField(
+                name="vectara_top_k",
                 field_type="str",
                 required=False,
+                placeholder="",
                 show=True,
                 advanced=False,
+                multiline=False,
+                password=False,
+                display_name="Top K",
                 value="",
-                display_name="Index Name",
             )
-            extra_fields.extend((extra_field, extra_field2))
-
+            extra_fields.extend(
+                (
+                    extra_field,
+                    extra_field2,
+                    extra_field3,
+                    extra_field4,
+                    extra_field5,
+                    extra_field6,
+                )
+            )
         if extra_fields:
             for field in extra_fields:
                 self.template.add_field(field)
@@ -272,6 +330,9 @@ class VectorStoreFrontendNode(FrontendNode):
             "pinecone_env",
             "client_kwargs",
             "search_kwargs",
+            "vectara_metadata_filter",
+            "vectara_lambda",
+            "vectara_top_k",
         ]
 
         # Check and set field attributes
@@ -289,7 +350,7 @@ class VectorStoreFrontendNode(FrontendNode):
         elif "embedding" in field.name:
             # for backwards compatibility
             field.name = "embedding"
-            field.required = True
+            field.required = False
             field.show = True
             field.advanced = False
             field.display_name = "Embedding"
