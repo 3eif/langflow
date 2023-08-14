@@ -47,6 +47,9 @@ ADVANCED_FIELDS = [
     "chroma_server_ssl_enabled",
     "chroma_server_grpc_port",
     "chroma_server_cors_allow_origins",
+    "vectara_metadata_filter",
+    "vectara_lambda",
+    "vectara_top_k",
 ]
 
 
@@ -329,7 +332,7 @@ class VectorStoreFrontendNode(FrontendNode):
             )
             extra_field4 = TemplateField(
                 name="vectara_metadata_filter",
-                field_type="code",
+                field_type="str",
                 required=False,
                 placeholder="",
                 show=True,
